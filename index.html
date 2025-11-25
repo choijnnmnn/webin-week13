@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서울 식물원 - 섹션 1 완성</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            overflow-x: hidden; 
+            background-color: #f0f0f0; 
+        }
+
+        /* 배경 전용 컨테이너 (고정) */
+        #global-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 140vw; 
+            height: 100vh;
+            z-index: 0; 
+            
+            background-image: url('./images/section1_bg.png'); 
+            background-size: cover; 
+            background-position: left center; 
+            will-change: transform;
+        }
+
+        /* 오브젝트들이 담길 컨테이너 */
+        #section1 {
+            position: relative;
+            width: 100%;
+            height: 100vh; 
+            overflow: hidden; 
+            z-index: 10; 
+            background-color: transparent; 
+        }
+
+        .layer {
+            position: absolute;
+            background-repeat: no-repeat;
+            will-change: transform;
+        }
+
+        /* --- 오브젝트 스타일 --- */
+        .island-main { 
+            width: 75%; height: auto; aspect-ratio: 16/9; 
+            left: -0%; bottom: -10%; 
+            background-size: cover; background-position: left bottom;
+            background-image: url('./images/section1_mainblock.png'); z-index: 4; 
+        }
+        .greenhouse-far { 
+            width: 65%; height: auto; aspect-ratio: 16/9;
+            right: 0%; top: 0%; 
+            background-size: cover; background-position: right top;
+            background-image: url('./images/section1_farplanet.png'); z-index: 3; 
+        }
+        .water-cube { 
+            width: 120%; height: auto; aspect-ratio: 1/1;
+            right: 0%; top: 0%;
+            background-size: contain; background-image: url('./images/section1_waterblock.png'); z-index: 5; 
+        }
+        .island-small { 
+            width: 100%; height: auto; aspect-ratio: 4/3;
+            left: 4%; top: 20%; 
+            background-size: contain; background-image: url('./images/section1_mainclose.png'); z-index: 2; 
+        }
+        .cloud-far-1 { width: 100%; height: auto; aspect-ratio: 3/2; left: 5%; top: 5%; background-size: contain; background-image: url('./images/section1_farcloud1.png'); z-index: 1; }
+        .cloud-far-2 { width: 100%; height: auto; aspect-ratio: 3/2; right: 35%; top: 10%; background-size: contain; background-image: url('./images/section1_farcloud2.png'); z-index: 1; }
+        .block-close { width: 100%; height: auto; aspect-ratio: 1/1; right: 0%; bottom: 5%; background-size: contain; background-image: url('./images/section1_closeblock.png'); z-index: 7; }
+        .cloud-close { width: 100%; height: auto; aspect-ratio: 2/1; left: -5%; bottom: 25%; background-size: contain; background-image: url('./images/section1_closecloud.png'); z-index: 6; }
+
+        /* --- 장식 요소 스타일 --- */
+        .deco {
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            will-change: transform;
+        }
+
+        .bush {
+            width: 50%; height: 50%; 
+            top: 0%; left: 23%; 
+            background-image: url('./images/section1_bush.png'); 
+            z-index: 5; 
+        }
+
+        .water-float {
+            width: 100%; height: 100%;
+            top: -32%; right: 0%; 
+            background-image: url('./images/section1_waterblockfloat.png'); 
+            z-index: 6; 
+        }
+
+        .water-cloud {
+            width: 20%; height: 50%;
+            top: -10%; right: -10%; 
+            background-image: url('./images/section1_closecloud2.png'); 
+            z-index: 7; opacity: 0.9; 
+        }
+        .water-cloud2 {
+            width: 30%; height:30%;
+            top: 28%; right:5%; 
+            background-image: url('./images/section1_closecloud2.png'); 
+            z-index: 1; opacity: 0.9; 
+        }
+
+        /* 다음 섹션 */
+        .next-section {
+            position: fixed; 
+            top: 0; left: 0;
+            z-index: 100;
+            width: 100%; height: 100vh;
+            background: #fff; 
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2rem;
+            opacity: 0; 
+            pointer-events: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="global-background"></div>
+
+    <div id="wrapper">
+        <section id="section1">
+            <div class="layer cloud-far-1"></div>
+            <div class="layer cloud-far-2"></div>
+            <div class="layer greenhouse-far"></div> 
+            <div class="layer island-main">
+                <div class="deco bush"></div>
+            </div>
+            <div class="layer island-small"></div>
+            <div class="layer water-cube">
+                <div class="deco water-float"></div>
+                <div class="deco water-cloud"></div> 
+                 <div class="deco water-cloud2"></div> 
+            </div>
+            <div class="layer cloud-close"></div>
+            <div class="layer block-close"></div>
+        </section>
+        
+        <div class="next-section">
+            </div>
+    </div>
+
+   <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#wrapper",
+                start: "top top",
+                end: "+=2000%", 
+                pin: true, 
+                scrub: 1, 
+            }
+        });
+
+        // ============================================================
+        // [STEP 1] 모여들기 (Assembly)
+        // ============================================================
+        
+        tl.addLabel("start");
+
+        tl.from(".island-main", { 
+            xPercent: -40, yPercent: 20, opacity: 0, 
+            duration: 6, ease: "power2.out" 
+        }, "start")
+        
+        .from(".greenhouse-far", { 
+            xPercent: 40, yPercent: -20, scale: 0.6, opacity: 0, 
+            duration: 6, ease: "power2.out" 
+        }, "start+=0.5")
+
+        .from(".island-small", { yPercent: -100, opacity: 0, duration: 5 }, "start+=1")
+        .from(".water-cube", { xPercent: 50, yPercent: 50, rotation: 10, duration: 5.5 }, "start+=1.5")
+        
+        .from(".block-close", { xPercent: 50, duration: 4 }, "start+=2")
+        .from(".cloud-close", { xPercent: -200, opacity: 0, duration: 5, ease: "power1.out"}, "start+=2")
+        .from(".cloud-far-1", { xPercent: -200, opacity: 0, duration: 5, ease: "power1.out"}, "start+=2")
+        .from(".cloud-far-2", { yPercent: -50, opacity: 0, duration: 4 }, "start+=2");
+
+
+        // ============================================================
+        // [STEP 2] 카메라 워킹 (Camera Walking)
+        // ============================================================
+
+        // 1. [FOCUS 1] 메인 섬 (왼쪽 아래) 보러 가기
+        tl.to("#section1", {
+            scale: 2,         
+            xPercent: 25,     
+            yPercent: -25,    
+            duration: 10,     
+            ease: "power2.inOut"
+        }, "+=1") 
+
+        .to("#global-background", { scale: 1.1, xPercent: 5, duration: 10 }, "<")
+
+        // [핵심] 구름 움직임 (사용자 설정 값 적용)
+        .to(".cloud-close", { 
+            xPercent: 20,    
+            yPercent: 30,   
+            duration: 10, 
+            ease: "power2.inOut" 
+        }, "<")
+
+        .to(".cloud-far-1", { 
+            xPercent: 30, 
+            yPercent: 0,    
+            duration: 10, 
+            ease: "power2.inOut" 
+        }, "<");
+
+
+        // 2. [FOCUS 2] 물 큐브 (오른쪽 중간) 보러 가기
+        tl.to("#section1", {
+            scale: 2.2,       
+            xPercent: -45,    
+            yPercent: 10,     
+            duration: 7,
+            ease: "power2.inOut"
+        })
+
+        .to("#global-background", { xPercent: -5, duration: 7 }, "<")
+        
+        // 구름 비켜주기
+        .to(".cloud-close", { xPercent: -10, yPercent: 0, duration: 7, ease: "power2.inOut" }, "<")
+        .to(".cloud-far-1", { xPercent: -10, yPercent: 0, duration: 7, ease: "power2.inOut" }, "<");
+
+
+        // 3. [FOCUS 3] 온실 (오른쪽 위) 보러 가기 & 퇴장
+        tl.to("#section1", {
+            scale: 5,         
+            xPercent: -200,    
+            yPercent: 200,     
+            duration: 15,
+            ease: "power2.in" 
+        })
+
+        .to("#global-background", { scale: 1.3, duration: 15 }, "<")
+        .to(".next-section", { opacity: 1, duration: 2 }, "-=2");
+
+
+        // ============================================================
+        // [GLOBAL FLOATING] 살아있는 정원 (무한 루프)
+        // ============================================================
+        
+        // 무거운 그룹
+        gsap.to(".island-main", { y: 15, rotation: 1, duration: 4, yoyo: true, repeat: -1, ease: "sine.inOut" });
+        gsap.to(".greenhouse-far", { y: 20, rotation: -1, duration: 5, delay: 1, yoyo: true, repeat: -1, ease: "sine.inOut" });
+        gsap.to(".island-small", { y: -80, duration: 3, delay: 1, yoyo: true, repeat: -1, ease: "sine.inOut" });
+
+        // 가벼운 그룹
+        gsap.to(".water-cube", { y: 15, rotation: 3, duration: 3, delay: 0.5, yoyo: true, repeat: -1, ease: "sine.inOut" });
+        gsap.to(".block-close", { y: 8, duration: 2.5, yoyo: true, repeat: -1, ease: "sine.inOut" });
+
+        // 공기 그룹
+        gsap.to(".cloud-far-1", { x: 20, y: 5, duration: 6, yoyo: true, repeat: -1, ease: "sine.inOut" });
+        gsap.to(".cloud-far-2", { x: -20, y: 5, duration: 7, delay: 1, yoyo: true, repeat: -1, ease: "sine.inOut" });
+        gsap.to(".cloud-close", { x: 15, y: -5, duration: 5.5, delay: 2, yoyo: true, repeat: -1, ease: "sine.inOut" });
+
+        // 부착된 장식
+        gsap.to(".water-float", { y: -10, rotation: 3, duration: 2.5, yoyo: true, repeat: -1, ease: "sine.inOut" });
+        gsap.to(".bush", { rotation: 5, scaleY: 0.9, transformOrigin: "bottom center", duration: 1.2, ease: "elastic.out(1.2, 0.4)", yoyo: true, repeat: -1 });
+        gsap.to(".water-cloud", { x: 10, y: -10, duration: 4, delay: 1, yoyo: true, repeat: -1, ease: "sine.inOut" });
+         gsap.to(".water-cloud2", { x: 15, y: -1, duration: 2, delay: 2, yoyo: true, repeat: -1, ease: "sine.inOut" });
+
+    </script>
+</body>
+</html>
